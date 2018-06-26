@@ -1,0 +1,183 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="./favicon.png">
+    <title>AC - Test</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<header>
+    <div id="pageTitle">ZTE Testing</div>
+</header>
+
+<div class="container">
+    <div id="leftRail">
+        <span id="formTitle">Setup:</span>
+        <form id="setupForm">
+            
+            <span class="formLabel">Publisher Id:</span>
+            <input type="text" class="formInput" id="pubName">
+            <span class="formLabel">Placement Name:</span>
+            <input type="text" class="formInput" id="placementName">
+            <span class="formLabel">Widget Name:</span>
+            <input type="text" class="formInput" id="modeName">
+            <span class="formLabel">Domain (network solution):</span>
+            <input type="text" class="formInput" id="domain">
+            <span class="formLabel">Page Type</span>
+            <input type="text" class="formInput" id="pageType" placeholder="article">
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+    <div id="main">
+        <span id="previewTitle">Preview:</span>
+        <div class="grid2x2">
+            <div id="leftWidget" class="box">
+                <div id="taboola-below-article-thumbnailsLeft"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+    var params;
+    var pid = $("#pubName").val();
+    var pln = $("#placementName").val();
+    var m = $("#modeName").val();
+    var dom = $("#domain").val();
+    var pt = $("#pageType").val();
+
+    $('#setupForm').submit(function (e) {
+        pid = $("#pubName").val();
+        pln = $("#placementName").val();
+        m = $("#modeName").val();
+        dom = $("#domain").val();
+        pt = $("#pageType").val();
+        e.preventDefault();
+        e.stopPropagation();
+        
+        params.newPubName = pid;
+        params.newModeName=m;
+        params.newPlacementName= pln;
+        params.newDomain= dom;
+        params.newPageType= pt;
+
+        var newPlacement = params[Object.keys(params)[2]];
+        reloadPage(params);
+    });
+
+
+
+
+    function pushLoader() {
+        var loaderScript = document.createElement('script');
+        loaderScript.type = 'text/javascript';
+        loaderScript.innerHTML = "window._taboola = window._taboola || [];\n" +
+            "        _taboola.push({"+ params.newPageType +": 'auto'});\n" +
+            "        !function (e, f, u, i) {\n" +
+            "            if (!document.getElementById(i)) {\n" +
+            "                e.async = 1;\n" +
+            "                e.src = u;\n" +
+            "                e.id = i;\n" +
+            "                f.parentNode.insertBefore(e, f);\n" +
+            "            }\n" +
+            "        }(document.createElement('script'),\n" +
+            "            document.getElementsByTagName('script')[0], '//cdn.taboola.com/libtrc/" + params.newPubName + "/loader.js'/*'loaderNew.js'*/,\n" +
+            "            'tb_loader_script');\n" +
+            "        if (window.performance && typeof window.performance.mark == 'function') {\n" +
+            "            window.performance.mark('tbl_ic');\n" +
+            "        }";
+        $('head').append(loaderScript);
+    }
+
+    function pushWidgets() {
+        var L_PusherScript = document.createElement('script');
+        L_PusherScript.type = 'text/javascript';
+        L_PusherScript.innerHTML =
+            "window._taboola = window._taboola || [];" +
+            "\n\t_taboola.push({" +
+            "\n\tmode: '" + params.newModeName + "' ," +
+            "\n\tcontainer:'" + 'taboola-below-article-thumbnailsLeft' + "'," +
+            "\n\tplacement:'" + params.newPlacementName + "'," +
+            "\n\ttarget_type: 'mix'" + "\n});";
+
+        $('#leftWidget').append(L_PusherScript);
+    }
+
+    function extractParams() {
+        var defaultParams = {
+            defaultModeName: 'thumbnails-ac',
+            defaultPubName: 'ume-technologies-browser-network',
+            defaultPlacementName: 'Below Homepage Thumbnails',
+            defaultDomain:'umeweb.com/mx',
+            defaultPageType: 'home',
+            forceActionBucket: 'trc_fpp_action_buckets'
+        };
+        var url_string = window.location.href;
+        var url = new URL(url_string);
+        var pid = url.searchParams.get("pubName");
+        var pln = url.searchParams.get("placementName");
+        var m = url.searchParams.get("modeName");
+        var dom = url.searchParams.get("taboola_sim_domain");
+        var pt = url.searchParams.get("pageType");
+
+
+
+        params = {
+            newPubName: pid !== null ? pid : defaultParams.defaultPubName,
+            newModeName: m !== null ? m : defaultParams.defaultModeName,
+            newPlacementName: pln !== null ? pln : defaultParams.defaultPlacementName,
+            newDomain: dom !==null ? dom : defaultParams.defaultDomain,
+            newPageType: pt !==null ? pt : defaultParams.defaultPageType
+        };
+        if (params)
+            console.log(params);
+        return params;
+    }
+
+    function setInputValues() {
+        $("#pubName").val(params.newPubName);
+        $("#placementName").val(params.newPlacementName);
+        $("#modeName").val(params.newModeName);
+        $("#domain").val(params.newDomain);
+        $("#pageType").val(params.newPageType);
+
+
+
+    }
+
+    function reloadPage(params) {
+        var url = window.location.href.split('?')[0];
+        var newPub = params[Object.keys(params)[0]];
+        var newMode = params[Object.keys(params)[1]];
+        var newPlacement = params[Object.keys(params)[2]];
+        var newDomain = params[Object.keys(params)[3]];
+        var newPageType = params[Object.keys(params)[4]];
+
+        window.location.href = url + '?pubName=' + newPub + '&modeName=' + newMode + '&placementName=' + newPlacement + '&taboola_sim_domain=' + newDomain + '&pageType=' + newPageType;
+
+ //       if (enableCategories) {
+        // } else {
+        //     window.location.href = url + '?pubName=' + newPub + '&modeName=' + newMode + '&placementName=AC- Category ' + params.newCategory  + '&contentCategory=' + newCategory + '&taboola_sim_domain=' + newDomain + '&pageType=' + newPageType;
+        // }
+
+    }
+
+    params = extractParams();
+    setInputValues();
+    pushLoader();
+    pushWidgets();
+});
+</script>
+<script type="text/javascript" id="flushScript">
+    window._taboola = window._taboola || [];
+    _taboola.push({flush: true});
+</script>
+</body>
+</html>

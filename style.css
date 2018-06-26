@@ -1,0 +1,171 @@
+html{
+    height: 100%;
+    margin: 0 auto;
+    font-family: 'Roboto', sans-serif;
+}
+body{
+    height: 100%;
+    margin: 0 auto;
+}
+header{
+    position: fixed;
+    z-index: 99999;
+    height: 50px;
+    width: 100%;
+    top:0;
+    background-color: #144c91;
+    display: table;
+}
+.hidden {
+    display:none;
+}
+.formLabel.checkbox{
+    margin-bottom: 7px;
+}
+.grid2x2{
+    min-height: 100%;
+    display: block;
+    flex-wrap: wrap;
+    max-width: 777px;
+    margin: auto;
+    flex-direction: row;
+}
+.grid2x2 > .box {
+    display: block;
+    flex-basis: calc(100% - 10px);
+    justify-content: center;
+    flex-direction: row;
+    margin: auto;
+}
+
+.box {
+    background-color: #ffffff;
+    margin: 5px;
+    margin-bottom: 50px;
+    box-sizing: border-box;
+    border: 1px solid #d2d2d2;
+}
+.grid2x2 > .box.infoBox{
+    padding: 5px;
+    justify-content: left;
+    display: inline-block;
+}
+.infoTitle{
+    font-weight: bold;
+    font-size:20px;
+    text-decoration: underline;
+}
+
+#pageLogo{
+    position: absolute;
+    height:100%;
+    width: 200px;
+    background-size: 50%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url('./taboolaLogo.png');
+}
+#pageTitle{
+    text-align: center;
+    color: white;
+    display: table-cell;
+    vertical-align: middle;
+    font-size: 30px;
+}
+.container {
+    display: -webkit-box;
+    display: -moz-box;
+    display: box;
+    margin-top: 50px;
+    -ms-flex-direction: row;
+    -webkit-box-orient: horizontal;
+    -moz-box-orient: horizontal;
+    -ms-box-orient: horizontal;
+    box-orient: horizontal;
+}
+
+#previewSection{
+    display: flex;
+}
+
+#leftRail {
+    background-color: #eeeeee;
+    border-right: 1px solid #d2d2d2;
+    width: 15%;
+    padding: 10px;
+    -webkit-box-flex:  0;
+    -moz-box-flex:  0;
+    -ms-box-flex:  0;
+    box-flex:  0;
+    min-width: 200px;
+}
+
+#main {
+    background-color: #d4e1ee;
+    flex-direction: column;
+    -ms-flex: 1;
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    -ms-box-flex: 1;
+    box-flex: 1;
+    padding: 10px;
+}
+
+#infoContainer{
+    display: flex;
+    flex-direction: column;
+    -webkit-box-flex:  1;
+    -moz-box-flex:  1;
+    -ms-box-flex:  1;
+    box-flex:  1;
+}
+#formTitle,#previewTitle{
+    font-weight: 700;
+    font-size: 26px;
+    text-decoration: underline;
+    margin-bottom: 10px;
+    display: block;
+}
+.formLabel{
+    font-size: 16px;
+}
+.formInput{
+    height: 24px;
+    width: 95%;
+    margin-bottom: 5px;
+}
+.thumbnails-ac .videoCube{
+    background-color: white !important;
+}
+@media (max-width:500px){
+    div#leftRail {
+        display:  block;
+        width: 100%;
+        padding:  0;
+    }
+#main {
+        display:  block;
+        flex: unset;
+        flex-direction:  unset;
+        -webkit-box-flex: unset;
+        width:  100%;
+        padding:  0;
+    }
+.container {
+        display:  block;
+    }
+    div#pageLogo {
+        display:  block;
+        position:  relative;
+        /* width:  100%; */
+        margin: auto;
+        height: 40px;
+    }
+    div#pageTitle {
+        display:  block;
+    }
+
+    header {
+        height: 80px;
+    }
+}
