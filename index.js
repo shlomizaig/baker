@@ -1,13 +1,10 @@
 var fs = require('fs');
 
-
-
-
 var fetch = require('node-fetch');
 fetch(
    // 'http://cdn.taboola.com/libtrc/ume-technologies-browser-network/loader.js'
-    'https://cdn.taboola.com/libtrc/ndtv/loader.js'
-    //'https://cdn.taboola.com/libtrc/ynet-ynet-/loader.js'
+   // 'https://cdn.taboola.com/libtrc/ndtv/loader.js'
+    'https://cdn.taboola.com/libtrc/ynet-ynet-/loader.js'
 ).then(res => res.text())
 .then(body => analyze(body));
 
@@ -31,18 +28,39 @@ function stringify2(obj) {
   return json;
 }
 
+
+function Clean(all,final)
+{
+    Object.keys(all).forEach(function(o){
+       
+        if( all[o].length == 1)
+          all[o] = all[o][0].v;
+        else
+        {
+          all[o].sort(function(o1,o2){return o2.c - o1.c;});
+          if( final)
+             all[o] = all[o][0].v; 
+        }
+    })
+}
+
+
+//process the file 
 function analyze(text)
 {
-  var s = text.indexOf("var ja={\"modes\"");
-  //var e = text.indexOf(",\"language\":");
-  var e = text.indexOf(",ka=0,la");
+  var s = text.indexOf("var config={\"modes\"");
+  var e = text.indexOf(",\"language\":");
+  
   var x = text.substr(s,e-s);
   x+="}";
   
+
+
+
   eval(x);
   
   var compare = {};
-  var allmodes = ja.modes;
+  var allmodes = config.modes;
   var listOfmodes = Object.keys(allmodes).forEach(function(mode){
     debug("====== "+mode+" ========"); 
     Object.keys(allmodes[mode]).forEach(function(attr){
@@ -58,18 +76,18 @@ function analyze(text)
      });
   })
 
-
+//Here we have all dupplication logging in allmode
    
   Clean(compare,true);
   console.log(JSON.stringify(compare,null,1));
    
-  var newJS = buildJS(compare,ja);
+  var newJS = buildJS(compare,config);//replace the new mode json inside the JS file
   var allfile = text.substr(0,s);
   var after = text.substr(e);
   allfile+=newJS+after;
 
-  var ret = fs.writeFileSync("C:\\Users\\szaig\\OneDrive\\Documents\\taboola-rbox\\loader.js", text);
-  var ret = fs.writeFileSync("C:\\Users\\szaig\\OneDrive\\Documents\\taboola-rbox\\loaderNew.js", allfile);
+  var ret = fs.writeFileSync("loader.js", text);
+  var ret = fs.writeFileSync("loaderNew.js", allfile);
 
     console.log("The file was saved!",ret);
  
@@ -101,7 +119,7 @@ function buildJS(common,all)
     
     propertylist = stringify2(common);
      
-     var mainListPrefix = "var ja = { modes:xx_ext(base,";
+     var mainListPrefix = "var la = { modes:xx_ext(base,";
      var mainListPosfix = ")";
      var main = {}; 
      for(var m in all.modes)
@@ -142,7 +160,7 @@ function buildJS(common,all)
       for (var p in all.modes[m])
       {
         var orig = all.modes[m][p];
-        var newObj = ja.modes[m][p];
+        var newObj = la.modes[m][p];
         if( typeof orig == "object")
         {
             if( JSON.stringify(orig) != JSON.stringify(newObj))
@@ -163,21 +181,6 @@ function buildJS(common,all)
     return fullJS;
 }
 
-
-function Clean(all,final)
-{
-    Object.keys(all).forEach(function(o){
-       
-        if( all[o].length == 1)
-          all[o] = all[o][0].v;
-        else
-        {
-          all[o].sort(function(o1,o2){return o2.c - o1.c;});
-          if( final)
-             all[o] = all[o][0].v; 
-        }
-    })
-}
 
 
 function debug(txt)
