@@ -76,7 +76,7 @@ function analyze(text)
      });
   })
 
-//Here we have all dupplication logging in allmode
+//Here we have all dupplication logging in compare obj
    
   Clean(compare,true);
   console.log(JSON.stringify(compare,null,1));
@@ -119,7 +119,7 @@ function buildJS(common,all)
     
     propertylist = stringify2(common);
      
-     var mainListPrefix = "var la = { modes:xx_ext(base,";
+     var mainListPrefix = "var config = { modes:xx_ext(base,";
      var mainListPosfix = ")";
      var main = {}; 
      for(var m in all.modes)
@@ -142,7 +142,7 @@ function buildJS(common,all)
      var mainList = stringify2(main);
 
     /*
-    var ia = { modes:xx_ext(base,{
+    var config = { modes:xx_ext(base,{
    "place1":{a:3},
    "place2":{a:10,b:3}
     })
